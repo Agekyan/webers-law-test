@@ -76,12 +76,10 @@ def _build_line_pair(save_figure):
     p = price_points
     curve_a = 130.0 + 28.0 * np.sin((p - 12.0) / 7.5) - 1.35 * p + 0.018 * (p - 34.0) ** 2
     curve_b = 118.0 + 24.0 * np.cos((p + 4.0) / 8.2) - 1.05 * p + 0.030 * (p - 42.0) ** 2
-    curve_c = 125.0 + 18.0 * np.sin((p + 1.0) / 6.1) - 1.25 * p + 0.022 * (p - 28.0) ** 2
 
     demand_curves = {
         "Product Alder": np.clip(curve_a, 0.0, None),
         "Product Birch": np.clip(curve_b, 0.0, None),
-        "Product Cedar": np.clip(curve_c, 0.0, None),
     }
 
     y_min, y_max = 0.0, 170.0
@@ -101,10 +99,16 @@ def _build_line_pair(save_figure):
     p3 = save_figure(fig, "V3_line_no_aids.png")
 
     fig, ax = plt.subplots(figsize=(8.4, 4.0))
-    color_list = ["tab:blue", "tab:orange", "tab:green"]
-    for (name, y), c in zip(demand_curves.items(), color_list):
+    v4_curves = {
+        "Product Alder": demand_curves["Product Alder"],
+        "Product Birch": demand_curves["Product Birch"],
+    }
+    color_list = ["tab:blue", "tab:orange"]
+    for (name, y), c in zip(v4_curves.items(), color_list):
         ax.plot(price_points, y, linewidth=1.6, color=c, label=name)
-        ax.fill_between(price_points, y, y_min, alpha=0.14, color=c)
+    y1 = v4_curves["Product Alder"]
+    y2 = v4_curves["Product Birch"]
+    ax.fill_between(price_points, y1, y2, alpha=0.20, color="tab:purple")
     ax.set_xlim(10.0, 60.0)
     ax.set_ylim(y_min, y_max)
     ax.set_yticks(y_ticks)
@@ -115,12 +119,14 @@ def _build_line_pair(save_figure):
     ax.legend(frameon=False, loc="upper right")
     p4 = save_figure(fig, "V4_line_gridlines.png")
 
-    areas = {name: float(np.trapezoid(y, price_points)) for name, y in demand_curves.items()}
-    correct_product = max(areas, key=areas.get)
+    areas_v3 = {name: float(np.trapezoid(y, price_points)) for name, y in demand_curves.items()}
+    correct_product_v3 = max(areas_v3, key=areas_v3.get)
+    areas_v4 = {name: float(np.trapezoid(y, price_points)) for name, y in v4_curves.items()}
+    correct_product_v4 = max(areas_v4, key=areas_v4.get)
 
     return [
-        (p3, "From price 12 to 58, which product has the largest total quantity (area under the curve)?", correct_product),
-        (p4, "From price 12 to 58, which product has the largest total quantity (area under the curve)?", correct_product),
+        (p3, "From price 12 to 58, which product has the largest total quantity (area under the curve)?", correct_product_v3),
+        (p4, "From price 12 to 58, which product has the largest total quantity (area under the curve)?", correct_product_v4),
     ]
 
 
