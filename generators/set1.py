@@ -126,7 +126,7 @@ def _build_line_pair(save_figure):
 
 def _build_dot_count_pair(save_figure):
     fragrance_names = ["Citrus Sky", "Amber Noir", "Velvet Rose", "Saffron Mist", "Juniper Clean", "Iris Smoke"]
-    oil_percent = np.array([18.4, 19.1, 18.7, 19.3, 18.6, 19.0], dtype=float)
+    oil_percent = np.array([17.0, 19.1, 18.7, 19.3, 18.6, 19.0], dtype=float)
 
     rng = np.random.default_rng(42)
 
