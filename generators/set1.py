@@ -108,7 +108,8 @@ def _build_line_pair(save_figure):
         ax.plot(price_points, y, linewidth=1.6, color=c, label=name)
     y1 = v4_curves["Product Alder"]
     y2 = v4_curves["Product Birch"]
-    ax.fill_between(price_points, y1, y2, alpha=0.20, color="tab:purple")
+    ax.fill_between(price_points, y1, y_min, alpha=0.18, color="tab:blue")
+    ax.fill_between(price_points, y2, y_min, alpha=0.18, color="tab:orange")
     ax.set_xlim(10.0, 60.0)
     ax.set_ylim(y_min, y_max)
     ax.set_yticks(y_ticks)
@@ -123,6 +124,9 @@ def _build_line_pair(save_figure):
     correct_product_v3 = max(areas_v3, key=areas_v3.get)
     areas_v4 = {name: float(np.trapezoid(y, price_points)) for name, y in v4_curves.items()}
     correct_product_v4 = max(areas_v4, key=areas_v4.get)
+    #Areas of line 1 and line 2 (birch and alder)
+    print("alder" , areas_v3["Product Alder"], areas_v4["Product Alder"])
+    print("birch" , areas_v3["Product Birch"], areas_v4["Product Birch"])
 
     return [
         (p3, "From price 12 to 58, which product has the largest total quantity (area under the curve)?", correct_product_v3),
