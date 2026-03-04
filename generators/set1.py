@@ -41,7 +41,7 @@ def make_viz(output_folder: str = "out", export_dpi: int = 200) -> None:
 
 def _build_bar_pair(save_figure):
     district_names = ["Riverton", "Northvale", "Marigold", "Eastpoint", "Cedar Bay", "Doverfield"]
-    broken_hydrant_percent = np.array([12.18, 12.77, 12.43, 12.59, 12.00, 12.52], dtype=float)
+    broken_hydrant_percent = np.array([12.20, 12.725, 12.43, 12.59, 12.00, 12.51], dtype=float)
 
     y_min, y_max = 11.90, 13.10
     y_ticks = np.arange(y_min, y_max + 1e-9, 0.05)
@@ -136,22 +136,18 @@ def _build_line_pair(save_figure):
 
 def _build_dot_count_pair(save_figure):
     fragrance_names = ["Citrus Sky", "Amber Noir", "Velvet Rose", "Saffron Mist", "Juniper Clean", "Iris Smoke"]
-    oil_percent = np.array([17.0, 19.1, 18.7, 19.3, 18.6, 19.0], dtype=float)
+    dot_counts = np.array([169, 177, 181, 183, 195, 188], dtype=int)
 
     rng = np.random.default_rng(42)
 
-    dots_per_percent = 2
-    total_percent = 100
-    total_dots = total_percent * dots_per_percent
+    total_dots = 200
 
     x = np.arange(len(fragrance_names))
 
     y_min, y_max = 0.0, 1.0
 
     fig, ax = plt.subplots(figsize=(9.2, 4.0))
-    for i, pct in enumerate(oil_percent):
-        filled = int(round(pct * dots_per_percent))
-
+    for i, filled in enumerate(dot_counts):
         xs = i + rng.uniform(-0.30, 0.30, size=filled)
         ys = rng.uniform(0.06, 0.94, size=filled)
 
@@ -164,13 +160,11 @@ def _build_dot_count_pair(save_figure):
     ax.set_yticks([])
     for spine in ax.spines.values():
         spine.set_visible(False)
-    ax.set_title("V5 — Perfume Oil Concentration (Filled Dots Only)")
+    ax.set_title("V5 — Perfume Dot Counts (Filled Dots Only)")
     p5 = save_figure(fig, "V5_dots_no_aids.png")
 
     fig, ax = plt.subplots(figsize=(9.2, 4.0))
-    for i, pct in enumerate(oil_percent):
-        filled = int(round(pct * dots_per_percent))
-
+    for i, filled in enumerate(dot_counts):
         xs_all = i + rng.uniform(-0.30, 0.30, size=total_dots)
         ys_all = rng.uniform(0.06, 0.94, size=total_dots)
 
@@ -189,11 +183,11 @@ def _build_dot_count_pair(save_figure):
     ax.set_yticks([])
     for spine in ax.spines.values():
         spine.set_visible(False)
-    ax.set_title("V6 — Perfume Oil Concentration (100% Reference Dots)")
+    ax.set_title("V6 — Perfume Dot Counts (200-Dot Reference)")
     p6 = save_figure(fig, "V6_dots_boxes.png")
 
-    diff_1 = abs(oil_percent[1] - oil_percent[0])  # Amber Noir - Citrus Sky
-    diff_2 = abs(oil_percent[5] - oil_percent[4])  # Iris Smoke - Juniper Clean
+    diff_1 = abs(dot_counts[1] - dot_counts[0])  # Amber Noir - Citrus Sky
+    diff_2 = abs(dot_counts[5] - dot_counts[4])  # Iris Smoke - Juniper Clean
 
     if diff_1 >= diff_2:
         correct = "Amber Noir minus Citrus Sky"
